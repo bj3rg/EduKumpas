@@ -1,0 +1,38 @@
+.cardContainer {
+  max-width: 25%;
+  padding: 20px;
+  margin: 20px;
+  background: rgb(236, 236, 236);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detailContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.detailContainer h1,
+h4,
+p {
+  margin: 5px;
+}
+
+.detailContainer h1 {
+  font-size: 27px;
+}
+
+.employeeImage {
+  margin: 5px;
+  width: 100px;
+  height: 100px;
+  border-radius: 3.5rem;
+}

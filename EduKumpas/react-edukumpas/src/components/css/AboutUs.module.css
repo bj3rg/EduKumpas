@@ -1,0 +1,108 @@
+.home_body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.elementContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+}
+
+.divElement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 40%;
+  text-align: justify;
+}
+
+.divElement h1 {
+  font-size: 35px;
+  color: #145da0;
+  font-weight: bold;
+}
+
+.elementContainer:last-child {
+  margin: 20px;
+}
+
+.elementImage {
+  width: 400px;
+  height: 250px;
+}
+
+/* Image 1 */
+.elementImage:nth-child(1) {
+  padding: 20px 20px 20px 0px;
+}
+
+/* Image 2 */
+.elementImage:nth-child(2) {
+  padding: 20px 0px 20px 20px;
+}
+
+/* Our Team */
+.elementContainer:nth-child(3) {
+  margin-top: 50px;
+}
+
+/* Employee Card CSS */
+.employeeCardContainer {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  margin-top: 20px;
+}
+
+.firstRowContainer,
+.secondRowContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.contactContainer {
+  width: 25%;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: justify;
+}
+
+.contactDetailContainer h1 {
+  text-align: center;
+  font-size: 30px;
+  color: #145da0;
+  font-weight: bold;
+}
+
+.contactDetailContainer {
+  margin-bottom: 20px;
+}
+
+.mailButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 18px;
+  border-radius: 20px;
+  width: 200px;
+  height: 40px;
+  font-weight: bold;
+  border-bottom: 5px solid #b46436;
+  transition: 0.3s;
+  background-color: #eb8b54;
+}
+
+.mailButton:hover {
+  border-bottom-width: 0;
+  transform: translateY(5px);
+}

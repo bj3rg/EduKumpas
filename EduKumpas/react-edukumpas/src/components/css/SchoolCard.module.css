@@ -1,0 +1,43 @@
+.schoolCardContainer {
+  width: 180px;
+  height: 180px;
+  background: #ffffff;
+  border-radius: 1em;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 0.4em;
+  align-items: flex-start;
+  padding: 1em 1.5em;
+  transition: all 0.5s ease;
+  /* box-shadow: -5px -5px 16px 5px rgba(0, 0, 0, 0.2); */
+}
+
+.schoolCardContainer:hover {
+  background: #b3b3b3;
+}
+
+.schoolCardDescriptionContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.schoolCardDescriptionContainer img,
+h1 {
+  padding: 0;
+  margin: 10px;
+}
+
+.iconLogo {
+  height: 7rem;
+  width: 7rem;
+}
+
+.schoolTypeText {
+  font-size: 20px;
+  text-align: center;
+}
