@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
+import Admin_Navbar from "./components/mini-components/AdminNavbar";
 import Home from "./components/pages/Home";
 import AboutUs from "./components/pages/AboutUs";
 import Search from "./components/pages/Search";
@@ -13,6 +14,8 @@ import School_List_Preschool from "./components/pages/Schools-List-Preschool";
 import Main_School from "./components/pages/Main-School";
 import Sign_Up from "./components/pages/Sign-Up";
 import Login from "./components/pages/Login";
+import ViewAdmin from "./components/pages/ViewAdmin";
+import AddDataAdmin from "./components/pages/AddDataAdmin";
 
 function App() {
   return (
@@ -118,7 +121,22 @@ function App() {
             </>
           }
         />
-
+        <Route
+          path="/representative/view-data"
+          element={
+            <>
+              <Admin_Navbar /> <ViewAdmin />
+            </>
+          }
+        />
+        <Route
+          path="/representative/add-data"
+          element={
+            <>
+              <Admin_Navbar /> <AddDataAdmin />
+            </>
+          }
+        />
         {/* Route without Navbar */}
         <Route path="/sign-up" element={<Sign_Up />} />
         <Route path="/login" element={<Login />} />

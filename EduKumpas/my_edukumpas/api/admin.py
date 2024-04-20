@@ -32,6 +32,9 @@ class NewsAdmin(admin.ModelAdmin):
 class FeaturesHighlightsAdmin(admin.ModelAdmin):
     list_display = ('school', 'feature_image')
     
+class RepresentativeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email_address', 'school', 'status')
+    
 admin.site.register(Schools, SchoolsAdmin)
 admin.site.register(ProgramsOffered, OfferedAdmin)
 admin.site.register(Admission, AdmissionAdmin)
@@ -40,3 +43,4 @@ admin.site.register(Activities, ActivitiesAdmin)
 admin.site.register(Clubs, ClubsAdmin)
 admin.site.register(News, NewsAdmin)
 admin.site.register(FeaturesHighlights, FeaturesHighlightsAdmin)
+admin.site.register(Representative, RepresentativeAdmin)

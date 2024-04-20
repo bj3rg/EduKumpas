@@ -78,7 +78,7 @@ export const AboutUs = () => {
             imageUrl={angelo}
           ></CompanyCard>
         </div>
-        <div className="flex flex-col lg:flex-row items-center">
+        <div className="flex flex-col lg:flex-row items-center justify-center">
           <CompanyCard
             employeeName="Benett Mission"
             employeeDescription="He is an aspiring fullstack developer. He is an aspiring fullstack developer. He is an aspiring fullstack developer."

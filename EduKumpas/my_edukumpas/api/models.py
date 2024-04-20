@@ -1,21 +1,7 @@
 from django.db import models
 from django.contrib import admin
 
-# Create your models here.
-
-# class Program(models.Model):
-#     name = models.CharField(max_length=100)
-#     description = models.TextField()
-
-#     def __str__(self):
-#         return self.name
-
-# class School(models.Model):
-#     name = models.CharField(max_length=100)
-#     programs = models.ManyToManyField(Program)
-
-#     def __str__(self):
-#         return self.name
+STATUS_CHOICES = [ ('Approved', 'Approved'), ('Not Approved', 'Not Approved')]
 
 CHOICES = [ ('College', 'College'),
            ('Senior High School' , 'Senior High School'), ('Junior High School', 'Junior High School'), 
@@ -43,6 +29,7 @@ class Representative(models.Model):
     contact_number = models.CharField(max_length=20, null=True)
     password = models.CharField(max_length=100)
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="Not Approved", null=True)
 class ProgramsOffered(models.Model):
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
     program_name = models.CharField(max_length=100)
@@ -84,7 +71,7 @@ class FeaturesHighlights(models.Model):
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
     feature_image = models.ImageField(upload_to='features/')
 
-admin.site.register(Representative)
+# admin.site.register(Representative)
 # admin.site.register(Schools)
 # admin.site.register(Location)
 # admin.site.register(ProgramsOffered)

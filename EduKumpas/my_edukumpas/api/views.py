@@ -40,26 +40,8 @@ class RepresentativeList(APIView):
         except Exception as e:
             error_message = str(e)
             return Response({'error': error_message,}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # def post(self, request):
-    #     if request.method == 'POST':
-    #         representative_serializer = RepresentativeSerializer(data=request.data['representative'])
-    #         school_serializer = Schools(data=request.data)
-
-    #         if representative_serializer.is_valid() and school_serializer.is_valid():
-    #             representative_instance = representative_serializer.save()
-    #             school_serializer.validated_data['representative'] = representative_instance
-    #             school_instance = school_serializer.save()
-
-    #             return Response(school_serializer.data, status=status.HTTP_201_CREATED)
-
-    #         return Response({
-    #             'error': 'Invalid data',
-    #             'errors': {
-    #                 'representative': representative_serializer.errors,
-    #                 'school': school_serializer.errors
-    #             }
-    #         }, status=status.HTTP_400_BAD_REQUEST)
+    # def get(self, request):
+        
 
 class SchoolListView(APIView):
     def get(self, request):
@@ -72,10 +54,6 @@ class SchoolListView(APIView):
         return Response(data)
     def post(self, request):
         body = request.data
-        # serializer = SchoolsSerializer(data=request.data)
-        # if serializer.is_valid(raise_exception=True):
-        #     serializer.save()
-        #     return Response(serializer.data)
         try:
             school_name = body['school_name']
             school_type = body.get('school_type', '')
