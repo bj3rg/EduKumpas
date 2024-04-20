@@ -10,7 +10,7 @@ class SchoolsSerializer(serializers.ModelSerializer):
 class RepresentativeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Representative
-        fields = ['id', 'name', 'email_address' ]
+        fields = ['id', 'name', 'email_address', 'contact_number', 'school' ]
         
 class ProgramsOfferedSerializer(serializers.ModelSerializer):
     class Meta:

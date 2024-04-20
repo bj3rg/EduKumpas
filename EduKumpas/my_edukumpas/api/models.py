@@ -38,11 +38,11 @@ class Schools(models.Model):
         return self.school_name
 
 class Representative(models.Model):
-    name = models.ForeignKey(Schools, on_delete=models.CASCADE)
-    email_address = models.EmailField()
+    name = models.CharField(max_length=100)
+    email_address = models.EmailField(null=True)
+    contact_number = models.CharField(max_length=20, null=True)
     password = models.CharField(max_length=100)
-    school = models.CharField(max_length=100)
-
+    school = models.ForeignKey(Schools, on_delete=models.CASCADE)
 class ProgramsOffered(models.Model):
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
     program_name = models.CharField(max_length=100)
@@ -84,6 +84,7 @@ class FeaturesHighlights(models.Model):
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
     feature_image = models.ImageField(upload_to='features/')
 
+admin.site.register(Representative)
 # admin.site.register(Schools)
 # admin.site.register(Location)
 # admin.site.register(ProgramsOffered)

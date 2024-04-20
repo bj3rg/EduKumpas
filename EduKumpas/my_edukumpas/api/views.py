@@ -11,25 +11,55 @@ from rest_framework import status
 from .models import Schools
 
 class RepresentativeList(APIView):
-    def post(self, request):
-        if request.method == 'POST':
-            representative_serializer = RepresentativeSerializer(data=request.data['representative'])
-            school_serializer = Schools(data=request.data)
+    def post(self,request):
+        body = request.data
+        try:
+            existing_school = Schools.objects.filter(
+                school_name = body['school']
+            ).first()
+            
+            if existing_school:
+                return Response({'error': 'School already registered'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            new_school = Schools.objects.create(
+                school_name=body['school'],
+                school_representative=body.get('name'),
+                school_rep_email=body.get('email_address'),
+                school_rep_phone_num=body.get('contact_number')
+            )
 
-            if representative_serializer.is_valid() and school_serializer.is_valid():
-                representative_instance = representative_serializer.save()
-                school_serializer.validated_data['representative'] = representative_instance
-                school_instance = school_serializer.save()
+            new_representative = Representative.objects.create(
+                name=body['name'],
+                school=new_school,
+                email_address=body.get('email_address'),
+                contact_number=body.get('contact_number'),
+                password=body.get('password')
+            )
+            return Response(status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            error_message = str(e)
+            return Response({'error': error_message,}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # def post(self, request):
+    #     if request.method == 'POST':
+    #         representative_serializer = RepresentativeSerializer(data=request.data['representative'])
+    #         school_serializer = Schools(data=request.data)
 
-                return Response(school_serializer.data, status=status.HTTP_201_CREATED)
+    #         if representative_serializer.is_valid() and school_serializer.is_valid():
+    #             representative_instance = representative_serializer.save()
+    #             school_serializer.validated_data['representative'] = representative_instance
+    #             school_instance = school_serializer.save()
 
-            return Response({
-                'error': 'Invalid data',
-                'errors': {
-                    'representative': representative_serializer.errors,
-                    'school': school_serializer.errors
-                }
-            }, status=status.HTTP_400_BAD_REQUEST)
+    #             return Response(school_serializer.data, status=status.HTTP_201_CREATED)
+
+    #         return Response({
+    #             'error': 'Invalid data',
+    #             'errors': {
+    #                 'representative': representative_serializer.errors,
+    #                 'school': school_serializer.errors
+    #             }
+    #         }, status=status.HTTP_400_BAD_REQUEST)
 
 class SchoolListView(APIView):
     def get(self, request):
@@ -68,7 +98,6 @@ class SchoolListView(APIView):
                 school_rep_email=school_rep_email,
                 school_logo=school_logo,
                 school_image=school_image
-                
             )
             new_school.save()
 
