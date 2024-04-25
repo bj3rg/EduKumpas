@@ -83,6 +83,13 @@ class SchoolListView(APIView):
         except KeyError:
             return Response({'error': 'Missing required fields'}, status=status.HTTP_400_BAD_REQUEST)
 
+class SchoolListViewByID(APIView):
+    def get(self, request,pk):
+        school= Schools.objects.filter(id=pk)
+        serializer= SchoolsSerializer(school, many=True)
+        mapped_data = serializer.data
+        return Response(mapped_data)
+    
 class OfferedListView(APIView):
     def get(self, request):
         school = request.query_params.get('school')
@@ -90,8 +97,14 @@ class OfferedListView(APIView):
             offered = ProgramsOffered.objects.filter(school=school)
         else:
             offered = ProgramsOffered.objects.all()
-        data = list(offered.values( 'program_name', 'duration', 'tuition_fee'))
+        data = list(offered.values( 'program_name','program_description' , 'duration', 'tuition_fee'))
         return Response(data)
+    def post(self, request):
+        serializer = ProgramsOfferedSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ActivitiesListView(APIView):
     def get(self, request):
@@ -102,7 +115,13 @@ class ActivitiesListView(APIView):
             activities = Activities.objects.all()
         data = list(activities.values('activity_name', 'activity_description', 'activity_image'))
         return Response(data)
-        
+    def post(self, request):
+        serializer = ActivitiesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class FacilitiesListView(APIView):
     def get(self, request):
         school = request.query_params.get('school')
@@ -112,6 +131,12 @@ class FacilitiesListView(APIView):
             facilities = Facilities.objects.all()
         data = list(facilities.values('facility_name', 'facility_description', 'facility_image'))
         return Response(data)
+    def post(self, request):
+        serializer = FacilitiesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ClubListView(APIView):
     def get(self, request):
@@ -132,6 +157,12 @@ class FeaturesListView(APIView):
             features = FeaturesHighlights.objects.all()
         data = list(features.values('feature_image'))
         return Response(data)
+    def post(self, request):
+        serializer = FeaturesHighlightsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class NewsListView(APIView):
     def get(self, request):
@@ -142,4 +173,10 @@ class NewsListView(APIView):
             news = News.objects.all()
         data = list(news.values('news_header', 'news_description', 'news_image'))
         return Response(data)
+    def post(self, request):
+        serializer = NewsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

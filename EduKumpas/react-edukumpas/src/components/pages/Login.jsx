@@ -45,7 +45,7 @@ export const Login = () => {
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded "
                   formAction=""
                 >
-                  Create
+                  Login
                 </button>
               </NavLink>
             </div>

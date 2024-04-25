@@ -1,7 +1,7 @@
 from django.urls import path
 from django.http import HttpResponse
 from .views import *
-from .views import SchoolListView, OfferedListView, FacilitiesListView, ActivitiesListView,ClubListView,FeaturesListView, NewsListView
+from .views import SchoolListView, OfferedListView, FacilitiesListView, ActivitiesListView,ClubListView,FeaturesListView, NewsListView, SchoolListViewByID
 urlpatterns = [
     # path('',lambda a: HttpResponse('working')),
     # path('add-school', AddSchoolView.as_view(), name='add-school'),
@@ -13,4 +13,5 @@ urlpatterns = [
     path('schools-features', FeaturesListView.as_view(), name='view-features'),
     path('schools-news', NewsListView.as_view(), name='view-news'),
     path('representative', RepresentativeList.as_view(), name='view-rep'),
+    path('school-by-id/<int:pk>', SchoolListViewByID.as_view(), name='view-schoolID'),
 ]

@@ -16,6 +16,7 @@ import Sign_Up from "./components/pages/Sign-Up";
 import Login from "./components/pages/Login";
 import ViewAdmin from "./components/pages/ViewAdmin";
 import AddDataAdmin from "./components/pages/AddDataAdmin";
+import Add from "./components/mini-components/AddActivity";
 
 function App() {
   return (

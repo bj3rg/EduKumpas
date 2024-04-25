@@ -72,12 +72,14 @@ export const Sign_Up = () => {
               />
             </div>
             <div className="text-center">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded "
-                formAction=""
-              >
-                Create
-              </button>
+              <NavLink to="/login">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded "
+                  formAction=""
+                >
+                  Create
+                </button>
+              </NavLink>
             </div>
           </form>
           <div className="flex flex-row gap-1 items-center">
