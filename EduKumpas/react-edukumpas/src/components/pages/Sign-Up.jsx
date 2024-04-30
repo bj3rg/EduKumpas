@@ -1,7 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import imgTest from "../../assets/logo.png";
 import { NavLink } from "react-router-dom";
 export const Sign_Up = () => {
+  const [option, selectedOption] = useState("");
+  const [newAccount, setNewAccount] = useState({
+    username: "",
+    first_name: "",
+    last_name: "",
+    email_address: "",
+    password: "",
+    school: "",
+    contact_number: "",
+  });
+  const handleChange = (e) => {
+    selectedOption(e.target.value);
+  };
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    console.log("SCHOOL TYPE", option);
+    const formData = new FormData();
+    formData.append("username", newAccount.username);
+    formData.append("first_name", newAccount.first_name);
+    formData.append("last_name", newAccount.last_name);
+    formData.append("email_address", newAccount.email_address);
+    formData.append("password", newAccount.password);
+    formData.append("school", newAccount.school);
+    formData.append("contact_number", newAccount.contact_number);
+    formData.append("school_type", option);
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/representative",
+        formData
+      );
+      console.log("Successfully added", response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="w-full md:w-3/5 items-center flex flex-col xl:flex-row justify-center gap-10 bg-white p-8 rounded-lg">
@@ -24,12 +62,76 @@ export const Sign_Up = () => {
         <div className="flex  justify-center flex-col rounded-md p-2 gap-2">
           <form action="" className="flex flex-col items-end border gap-2 p-8">
             <div className="flex items-center gap-2">
-              <label htmlFor="fullName">Full Name</label>
+              <label htmlFor="userName">Username</label>
               <input
                 type="text"
-                id="fullName"
-                placeholder="Enter your name"
+                id="userName"
+                placeholder="Enter your username"
                 className="form-control border-2 border rounded-md w-60 p-2"
+                onChange={(e) =>
+                  setNewAccount((prev) => ({
+                    ...prev,
+                    username: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="firstName">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                placeholder="Enter your First Name"
+                className="form-control border-2 border rounded-md w-60 p-2"
+                onChange={(e) =>
+                  setNewAccount((prev) => ({
+                    ...prev,
+                    first_name: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="lastName">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                placeholder="Enter your Last Name"
+                className="form-control border-2 border rounded-md w-60 p-2"
+                onChange={(e) =>
+                  setNewAccount((prev) => ({
+                    ...prev,
+                    last_name: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                placeholder="Enter email:"
+                className="form-control border-2 border rounded-md w-60 p-2"
+                onChange={(e) =>
+                  setNewAccount((prev) => ({
+                    ...prev,
+                    email_address: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="email">Contact No.</label>
+              <input
+                type="text"
+                placeholder="Enter contact number:"
+                className="form-control border-2 border rounded-md w-60 p-2"
+                onChange={(e) =>
+                  setNewAccount((prev) => ({
+                    ...prev,
+                    contact_number: e.target.value,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center gap-2">
@@ -39,6 +141,12 @@ export const Sign_Up = () => {
                 id="schoolName"
                 placeholder="Enter school name"
                 className="form-control border-2 border rounded-md w-60 p-2"
+                onChange={(e) =>
+                  setNewAccount((prev) => ({
+                    ...prev,
+                    school: e.target.value,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center gap-2">
@@ -46,29 +154,28 @@ export const Sign_Up = () => {
               <select
                 id="type"
                 className="form-control border-2 border rounded-md w-60 p-2"
+                onChange={handleChange}
               >
-                <option value="college">College</option>
-                <option value="seniorHigh">Senior High School</option>
-                <option value="juniorHigh">Junior High School</option>
-                <option value="elementary">Elementary</option>
-                <option value="preschool">Preschool</option>
+                <option value="College">College</option>
+                <option value="Senior High School">Senior High School</option>
+                <option value="Junior High School">Junior High School</option>
+                <option value="Elementary">Elementary</option>
+                <option value="Preschool">Preschool</option>
               </select>
             </div>
 
-            <div className="flex items-center gap-2">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                placeholder="Enter email:"
-                className="form-control border-2 border rounded-md w-60 p-2"
-              />
-            </div>
             <div className="flex items-center gap-2">
               <label htmlFor="password">Password</label>
               <input
                 type="password"
                 placeholder="Enter password:"
                 className="form-control border-2 border w-60 p-2 rounded-md"
+                onChange={(e) =>
+                  setNewAccount((prev) => ({
+                    ...prev,
+                    password: e.target.value,
+                  }))
+                }
               />
             </div>
             <div className="text-center">
@@ -76,6 +183,7 @@ export const Sign_Up = () => {
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded "
                   formAction=""
+                  onClick={handleAdd}
                 >
                   Create
                 </button>
