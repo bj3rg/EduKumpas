@@ -1,15 +1,19 @@
 from django.shortcuts import render
-from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse, HttpResponse
 from .serializers import *
 from .models import Schools,ProgramsOffered, Admission, Facilities, Activities, Clubs, News, FeaturesHighlights
 # Create your views here.
-
+from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Schools
-
+from .models import *
+CustomUser = get_user_model()
+print(make_password('12345'))
+print(check_password('1234','pbkdf2_sha256$720000$K9qlERHbhsZvGPXH8EFdJC$Hwo4oaNiBtC3UKtYmRlUzipdgtYIrzaEjph7J2bhQBo=' ))
 class RepresentativeList(APIView):
     def post(self,request):
         body = request.data
@@ -21,15 +25,27 @@ class RepresentativeList(APIView):
             if existing_school:
                 return Response({'error': 'School already registered'}, status=status.HTTP_400_BAD_REQUEST)
             
+            new_user = User.objects.create_user(
+                username=body['username'],
+                email=body.get('email_address'),
+                password=body.get('password'),
+                first_name =body.get('first_name'),
+                last_name =body.get('last_name')
+            )
+            
+            full_name = str(body.get('first_name')+" "+body.get('last_name'))
+            
             new_school = Schools.objects.create(
                 school_name=body['school'],
-                school_representative=body.get('name'),
+                school_type=body['school_type'],
+                school_representative=full_name,
                 school_rep_email=body.get('email_address'),
                 school_rep_phone_num=body.get('contact_number')
             )
-
+            print("HERE " + str(new_user))
             new_representative = Representative.objects.create(
-                name=body['name'],
+                user=new_user,
+                name=full_name,
                 school=new_school,
                 email_address=body.get('email_address'),
                 contact_number=body.get('contact_number'),
@@ -40,7 +56,6 @@ class RepresentativeList(APIView):
         except Exception as e:
             error_message = str(e)
             return Response({'error': error_message,}, status=status.HTTP_400_BAD_REQUEST)
-    # def get(self, request):
         
 
 class SchoolListView(APIView):
@@ -147,6 +162,12 @@ class ClubListView(APIView):
             clubs = Clubs.objects.all()
         data = list(clubs.values('club_name', 'club_description', 'club_image'))
         return Response(data)
+    def post(self, request):
+        serializer =ClubsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FeaturesListView(APIView):
     def get(self, request):

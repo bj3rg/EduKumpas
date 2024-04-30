@@ -1,4 +1,5 @@
 from .models import *
+# from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Schools, ProgramsOffered, Admission, Facilities, Activities, Clubs, News, FeaturesHighlights
 
@@ -20,9 +21,23 @@ class SchoolsSerializer(serializers.ModelSerializer):
         ]
 
 class RepresentativeSerializer(serializers.ModelSerializer):
+    # password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     class Meta:
         model = Representative
-        fields = ['id','school', 'name', 'email_address', 'contact_number', 'school' ]
+        fields = ['id','user', 'school', 'name', 'email_address', 'contact_number', 'password' ]
+    # def save(self):
+    #     password = self.validated_data['password']
+    #     # password2 = self.validated_data['password2']
+        
+    #     # if password != password2:
+    #     #     raise serializers.ValidationError({"Error": "Password does not match"})
+        
+    #     if Representative.objects.filter(email = self.validated_data['email']).exists():
+    #         raise serializers.ValidationError({"Error": "Email already exist"})
+        
+    #     account = Representative(email=self.validated_data['email_address'], username=self.validated_data['username'], school=self.validated_data['school'], name=self.validated_data['name'], contact_number=self.validated_data['contact_number'] )
+    #     account.set_password(password)
+    #     account.save()
         
 class ProgramsOfferedSerializer(serializers.ModelSerializer):
     class Meta:

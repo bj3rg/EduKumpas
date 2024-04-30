@@ -33,7 +33,7 @@ class FeaturesHighlightsAdmin(admin.ModelAdmin):
     list_display = ('school', 'feature_image')
     
 class RepresentativeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email_address', 'school', 'status')
+    list_display = ( 'user','name', 'email_address', 'school', 'status')
     
 admin.site.register(Schools, SchoolsAdmin)
 admin.site.register(ProgramsOffered, OfferedAdmin)

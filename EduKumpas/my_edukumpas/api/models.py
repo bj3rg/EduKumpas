@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib import admin
-
+from django.contrib.auth.models import User
 STATUS_CHOICES = [ ('Approved', 'Approved'), ('Not Approved', 'Not Approved')]
 
 CHOICES = [ ('College', 'College'),
@@ -9,6 +9,7 @@ CHOICES = [ ('College', 'College'),
 
 PUBLIC_PRIVATE = [('Public', 'Public') , ('Private', 'Private')]    
 
+    
 class Schools(models.Model):
     school_name = models.CharField(max_length=100, null=False)
     school_website = models.URLField(null=True)
@@ -24,12 +25,17 @@ class Schools(models.Model):
         return self.school_name
 
 class Representative(models.Model):
-    name = models.CharField(max_length=100)
-    email_address = models.EmailField(null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=100, null=True)
     contact_number = models.CharField(max_length=20, null=True)
+    email_address = models.EmailField(null=True)
     password = models.CharField(max_length=100)
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="Not Approved", null=True)
+    
+    def __str__(self):
+        return self.email_address
+
 class ProgramsOffered(models.Model):
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
     program_name = models.CharField(max_length=100)
