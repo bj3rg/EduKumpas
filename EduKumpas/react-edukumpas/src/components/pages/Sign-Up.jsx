@@ -19,7 +19,7 @@ export const Sign_Up = () => {
   const handleChange = (e) => {
     selectedOption(e.target.value);
   };
-
+  // new line here
   const handleAdd = async (e) => {
     e.preventDefault();
     console.log("SCHOOL TYPE", option);
