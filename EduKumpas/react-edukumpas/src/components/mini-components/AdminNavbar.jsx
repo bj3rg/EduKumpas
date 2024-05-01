@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import navIcon from "../../assets/icons8-nav-50.png";
 import logo from "../../assets/logo.png";
 import { NavLink } from "react-router-dom";
-export const Admin_Navbar = () => {
+import { useNavigate } from "react-router-dom";
+export const Admin_Navbar = ({ email, school_id, school_name }) => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   function onToggleMenu() {
@@ -23,7 +25,7 @@ export const Admin_Navbar = () => {
         <ul className="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8 py-4 text-xl">
           <li>
             <NavLink
-              to="/representative/view-data"
+              to={`/representative/view-data/${email}`}
               className="hover:text-gray-500"
             >
               View Data
@@ -31,30 +33,25 @@ export const Admin_Navbar = () => {
           </li>
           <li>
             <NavLink
-              to="/representative/add-data"
+              to={`/representative/add-data/${email}/${school_id}/${school_name}`}
               className="hover:text-gray-500"
             >
               Add Data
             </NavLink>
           </li>
-          {/* <li>
-            <NavLink to="/" className="hover:text-gray-500">
-              Search
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/" className="hover:text-gray-500">
-              Schools
-            </NavLink>
-          </li> */}
         </ul>
       </nav>
       <div className="flex items-center gap-6 py-2">
-        <NavLink to="/sign-up">
-          <button className="bg-[#87ac] text-white px-5 py-2 rounded-full hover:bg-[#F22222]">
-            Logout
-          </button>
-        </NavLink>
+        <button
+          className="bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-[#F22222]"
+          onClick={() => {
+            navigate("/login");
+            sessionStorage.removeItem("token");
+          }}
+        >
+          Logout
+        </button>
+
         <img
           src={navIcon}
           alt=""

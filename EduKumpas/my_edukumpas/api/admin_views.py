@@ -36,9 +36,9 @@ class LoginView(APIView):
 
         token, _ = Token.objects.get_or_create(user=user)
         serializer = UserSerializer(user)
-        return Response({"token": token.key, "user": serializer.data['username']}, status=status.HTTP_200_OK)
+        return Response({"token": token.key, "email": serializer.data['email']}, status=status.HTTP_200_OK)
 
-class RepresentativeList(APIView):
+class AdminRepresentativeList(APIView):
     def post(self,request):
         body = request.data
         try:
@@ -89,9 +89,10 @@ class RepresentativeList(APIView):
             return Response({'error': error_message,}, status=status.HTTP_400_BAD_REQUEST)
         
 
-class SchoolListView(APIView):
-    # authentication_classes = [SessionAuthentication, TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+class AdminSchoolListView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         school_type = request.query_params.get('school_type')
         if school_type:
@@ -100,47 +101,50 @@ class SchoolListView(APIView):
             schools = Schools.objects.all()
         data = list(schools.values('id','school_name', 'school_type', 'school_website', 'public_private', 'school_representative', 'school_rep_phone_num', 'school_rep_email', 'school_logo', 'school_image', 'school_location'))
         return Response(data)
-    # def post(self, request):
-    #     body = request.data
-    #     try:
-    #         school_name = body['school_name']
-    #         school_type = body.get('school_type', '')
-    #         school_website = body.get('school_website', '')
-    #         public_private = body.get('public_private', '')
-    #         school_representative = body.get('school_representative', '')
-    #         school_rep_phone_num = body.get('school_rep_phone_num', '')
-    #         school_rep_email = body.get('school_rep_email', '')
-    #         school_logo = body.get('school_logo', None)
-    #         school_image = body.get('school_image', None)
+    def post(self, request):
+        body = request.data
+        try:
+            school_name = body['school_name']
+            school_type = body.get('school_type', '')
+            school_website = body.get('school_website', '')
+            public_private = body.get('public_private', '')
+            school_representative = body.get('school_representative', '')
+            school_rep_phone_num = body.get('school_rep_phone_num', '')
+            school_rep_email = body.get('school_rep_email', '')
+            school_logo = body.get('school_logo', None)
+            school_image = body.get('school_image', None)
             
 
-    #         new_school = Schools(
-    #             school_name=school_name,
-    #             school_type=school_type,
-    #             school_website=school_website,
-    #             public_private=public_private,
-    #             school_representative=school_representative,
-    #             school_rep_phone_num=school_rep_phone_num,
-    #             school_rep_email=school_rep_email,
-    #             school_logo=school_logo,
-    #             school_image=school_image
-    #         )
-    #         new_school.save()
+            new_school = Schools(
+                school_name=school_name,
+                school_type=school_type,
+                school_website=school_website,
+                public_private=public_private,
+                school_representative=school_representative,
+                school_rep_phone_num=school_rep_phone_num,
+                school_rep_email=school_rep_email,
+                school_logo=school_logo,
+                school_image=school_image
+            )
+            new_school.save()
 
-    #         return Response({'message': 'School added successfully'}, status=status.HTTP_201_CREATED)
-    #     except KeyError:
-    #         return Response({'error': 'Missing required fields'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'School added successfully'}, status=status.HTTP_201_CREATED)
+        except KeyError:
+            return Response({'error': 'Missing required fields'}, status=status.HTTP_400_BAD_REQUEST)
 
-class SchoolListViewByID(APIView):
-    # authentication_classes = [SessionAuthentication, TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
-    def get(self, request,pk):
-        school= Schools.objects.filter(id=pk)
+class AdminSchoolListViewByID(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request,email):
+        school= Schools.objects.filter(school_rep_email=email)
         serializer= SchoolsSerializer(school, many=True)
         mapped_data = serializer.data
         return Response(mapped_data)
     
-class OfferedListView(APIView):
+class AdminOfferedListView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         school = request.query_params.get('school')
         if school:
@@ -149,14 +153,22 @@ class OfferedListView(APIView):
             offered = ProgramsOffered.objects.all()
         data = list(offered.values( 'program_name','program_description' , 'duration', 'tuition_fee'))
         return Response(data)
-    # def post(self, request):
-    #     serializer = ProgramsOfferedSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        data =request.data
+        school = data['program_name']
+        offering = ProgramsOffered.objects.filter(program_name= school).exists()
+        if offering:
+            return Response('Already listed', status=status.HTTP_406_NOT_ACCEPTABLE)
+        serializer = ProgramsOfferedSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class ActivitiesListView(APIView):
+class AdminActivitiesListView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         school = request.query_params.get('school')
         if school:
@@ -165,14 +177,22 @@ class ActivitiesListView(APIView):
             activities = Activities.objects.all()
         data = list(activities.values('activity_name', 'activity_description', 'activity_image'))
         return Response(data)
-    # def post(self, request):
-    #     serializer = ActivitiesSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        data =request.data
+        school = data['activity_name']
+        offering = Activities.objects.filter(activity_name= school).exists()
+        if offering:
+            return Response('Already listed', status=status.HTTP_406_NOT_ACCEPTABLE)
+        serializer = ActivitiesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class FacilitiesListView(APIView):
+class AdminFacilitiesListView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         school = request.query_params.get('school')
         if school:
@@ -181,14 +201,22 @@ class FacilitiesListView(APIView):
             facilities = Facilities.objects.all()
         data = list(facilities.values('facility_name', 'facility_description', 'facility_image'))
         return Response(data)
-    # def post(self, request):
-    #     serializer = FacilitiesSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        data =request.data
+        school = data['facility_name']
+        offering = Facilities.objects.filter(facility_name= school).exists()
+        if offering:
+            return Response('Already listed', status=status.HTTP_406_NOT_ACCEPTABLE)
+        serializer = FacilitiesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class ClubListView(APIView):
+class AdminClubListView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         school = request.query_params.get('school')
         if school:
@@ -197,14 +225,22 @@ class ClubListView(APIView):
             clubs = Clubs.objects.all()
         data = list(clubs.values('club_name', 'club_description', 'club_image'))
         return Response(data)
-    # def post(self, request):
-    #     serializer =ClubsSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        data =request.data
+        school = data['club_name']
+        offering = Clubs.objects.filter(club_name= school).exists()
+        if offering:
+            return Response('Already listed', status=status.HTTP_406_NOT_ACCEPTABLE)
+        serializer =ClubsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class FeaturesListView(APIView):
+class AdminFeaturesListView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         school = request.query_params.get('school')
         if school:
@@ -213,14 +249,17 @@ class FeaturesListView(APIView):
             features = FeaturesHighlights.objects.all()
         data = list(features.values('feature_image'))
         return Response(data)
-    # def post(self, request):
-    #     serializer = FeaturesHighlightsSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        serializer = FeaturesHighlightsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class NewsListView(APIView):
+class AdminNewsListView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         school = request.query_params.get('school')
         if school:
@@ -229,10 +268,10 @@ class NewsListView(APIView):
             news = News.objects.all()
         data = list(news.values('news_header', 'news_description', 'news_image'))
         return Response(data)
-    # def post(self, request):
-    #     serializer = NewsSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        serializer = NewsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

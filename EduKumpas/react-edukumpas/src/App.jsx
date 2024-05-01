@@ -123,20 +123,12 @@ function App() {
           }
         />
         <Route
-          path="/representative/view-data"
-          element={
-            <>
-              <Admin_Navbar /> <ViewAdmin />
-            </>
-          }
+          path="/representative/view-data/:email"
+          element={<ViewAdmin />}
         />
         <Route
-          path="/representative/add-data"
-          element={
-            <>
-              <Admin_Navbar /> <AddDataAdmin />
-            </>
-          }
+          path="/representative/add-data/:email/:school_id/:school_name"
+          element={<AddDataAdmin />}
         />
         {/* Route without Navbar */}
         <Route path="/sign-up" element={<Sign_Up />} />

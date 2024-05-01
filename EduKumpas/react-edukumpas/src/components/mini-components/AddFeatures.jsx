@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import FieldInput from "../../components/mini-components/FieldInput";
-export const AddFeatures = () => {
+export const AddFeatures = ({ school_id, school_name }) => {
+  const [correct, setCorrect] = useState(false);
+  const [exist, errorExist] = useState("");
+  const [invalid, setInvalid] = useState("");
   const [newFeatures, setNewFeatures] = useState({
-    school: "",
+    school: school_id || "",
     feature_image: null,
   });
   const [errMsg, setErrMsg] = useState("");
@@ -34,63 +37,72 @@ export const AddFeatures = () => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/schools-features",
-        formData
+        "http://127.0.0.1:8000/api/admin/features",
+        formData,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("token")}`,
+          },
+        }
       );
       console.log("Added successfully", response.data);
+      setCorrect(false);
+      window.location.reload();
     } catch (error) {
-      console.log(error);
+      if (error.response && error.response.status === 406) {
+        errorExist("Program already Listed");
+        setInvalid("");
+        setCorrect(true);
+      } else {
+        setInvalid("Invalid input");
+        errorExist("");
+        setCorrect(true);
+        console.log("Error:", error);
+      }
     }
   };
   return (
-    <div className="flex flex-col items-center justify-center gap-20">
-      <div className="w-[750px] bg-blue-600 mt-500 px-[30px] py-[30px]  rounded-[15px] z-[99]">
-        <div className="text-white mb-[10px] flex flex-col gap-[3px]">
-          <h1 className="font-bold border-b-2 border-solid border-white text-[16px]">
-            Add Feature Images
-          </h1>
-          <p className="text-[12px]">
-            Fill out the following fields. Use “N/A” if not applicable.
-          </p>
-        </div>
-        <div className="flex flex-col gap-[10px]">
+    <div className="w-full lg:w-[750px] bg-orange-400 mt-500 px-[30px] py-[30px]  rounded-[15px] z-[99]">
+      <div className="text-white mb-[10px] flex flex-col gap-[3px]">
+        <h1 className="font-bold border-b-2 border-solid border-white text-[16px]">
+          Add Feature Images
+        </h1>
+      </div>
+
+      <div className="flex flex-col gap-[10px]">
+        {/* first row */}
+        <div className="w-full flex justify-between">
           <FieldInput
             inputDisplay={"School"}
             type={"text"}
-            width={"w-[340px]"}
-            handleChange={(e) =>
-              setNewFeatures((prev) => ({
-                ...prev,
-                school: e.target.value,
-              }))
-            }
+            value={school_name}
           />
-          {/* first row */}
-          <div className="w-full flex justify-between ">
-            <input
-              type="file"
-              accept="image/jpeg, image/jpg, image/jpg"
-              className="px-[5px] text-black h-[28px] bg-white rounded-[8px] w-[250px"
-              onChange={handleFileChange}
-            />
-          </div>
+        </div>
 
-          <div className="w-full flex gap-[20px] mt-5 justify-between">
-            <button className="p-[5px] bg-white rounded-[10px] text-black min-w-[70px] cursor-pointer">
-              Clear
-            </button>
-            <button
-              onClick={handleAdd}
-              className="p-[5px] bg-white rounded-[10px] text-black min-w-[70px] cursor-pointer"
-            >
-              Add
-            </button>
-            {/* <ButtonComp2
-            text="Add"
-            otherStyle={"p-[5px] rounded-[10px]"}
-            handleClick={handleClick}
-          /> */}
+        <div className="w-full flex justify-between mt-2">
+          <input
+            type="file"
+            accept="image/jpeg, image/jpg, image/jpg"
+            className="px-[5px] text-black h-[28px] bg-white rounded-[8px] w-[250px"
+            onChange={handleFileChange}
+          />
+        </div>
+        {correct && (
+          <div className="bg-[#F5656561] w-[200px] mt-2 text-sm border-[1px] border-[#FF000061] px-[20px] py-[5px] rounded-md">
+            <h1></h1>
           </div>
+        )}
+
+        <div className="w-full flex gap-[20px] mt-5 justify-between">
+          <button className="p-[5px] bg-white rounded-[10px] text-black min-w-[70px] cursor-pointer">
+            Clear
+          </button>
+          <button
+            onClick={handleAdd}
+            className="p-[5px] bg-white rounded-[10px] text-black min-w-[70px] cursor-pointer"
+          >
+            Add
+          </button>
         </div>
       </div>
     </div>

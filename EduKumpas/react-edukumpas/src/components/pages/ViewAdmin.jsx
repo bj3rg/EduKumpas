@@ -1,18 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import editIcon from "../../assets/icons8-edit-50.png";
+import Admin_Navbar from "../mini-components/AdminNavbar";
 export const Admin = () => {
   const [data, setData] = useState([]);
+  const [schoolId, setSchoolId] = useState("");
+  const [schoolName, setSchoolName] = useState("");
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
+  const { email } = useParams();
   useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
     axios
-      .get("http://127.0.0.1:8000/api/school-by-id/2")
-      .then((res) => setData(res.data))
+      .get(`http://127.0.0.1:8000/api/admin/schools/${email}`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        const schoolData = res.data[0];
+        const school_id = schoolData.id;
+        const school_name = schoolData.school_name;
+        console.log(schoolName);
+        setSchoolName(school_name);
+        setSchoolId(school_id);
+
+        setData(res.data);
+      })
       .catch((err) => console.log(err));
   }, []);
   return (
     <div>
+      <Admin_Navbar
+        email={email}
+        school_id={schoolId}
+        school_name={schoolName}
+      />
       <div>
         <div className="flex justify-center mt-12">
           <table className="table-auto">

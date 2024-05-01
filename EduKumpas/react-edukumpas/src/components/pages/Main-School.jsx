@@ -26,7 +26,7 @@ export const Main_School = () => {
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
-    history.pushState({}, "", `/school/${schoolName}`); // Update URL with active tab
+    history.pushState({}, "", `/schools/${schoolName}/${id}`); // Update URL with active tab
   };
 
   const renderActiveComponent = () => {
