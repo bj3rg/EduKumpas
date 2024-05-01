@@ -2,7 +2,10 @@ import React from "react";
 import testImage from "../../assets/test.jpg";
 import style from "../css/Home.module.css";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 export const Home = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex items-center justify-center mt-15 lg:mt-40">
       <div className="flex flex-col w-[80%] lg:w-[80%] lg:flex-row justify-center">
@@ -23,7 +26,12 @@ export const Home = () => {
             <NavLink to="/search">
               <button className={style.searchButton}>FIND SCHOOL</button>
             </NavLink>
-            <button className={style.addButton}>ADD YOUR SCHOOL</button>
+            <button
+              className={style.addButton}
+              onClick={() => navigate("/login")}
+            >
+              ADD YOUR SCHOOL
+            </button>
           </div>
         </div>
 
