@@ -3,6 +3,11 @@ from .models import *
 from rest_framework import serializers
 from .models import Schools, ProgramsOffered, Admission, Facilities, Activities, Clubs, News, FeaturesHighlights
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = User
+        fields = ['id', 'username', 'password', 'email']
 class SchoolsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schools
@@ -21,23 +26,9 @@ class SchoolsSerializer(serializers.ModelSerializer):
         ]
 
 class RepresentativeSerializer(serializers.ModelSerializer):
-    # password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     class Meta:
         model = Representative
         fields = ['id','user', 'school', 'name', 'email_address', 'contact_number', 'password' ]
-    # def save(self):
-    #     password = self.validated_data['password']
-    #     # password2 = self.validated_data['password2']
-        
-    #     # if password != password2:
-    #     #     raise serializers.ValidationError({"Error": "Password does not match"})
-        
-    #     if Representative.objects.filter(email = self.validated_data['email']).exists():
-    #         raise serializers.ValidationError({"Error": "Email already exist"})
-        
-    #     account = Representative(email=self.validated_data['email_address'], username=self.validated_data['username'], school=self.validated_data['school'], name=self.validated_data['name'], contact_number=self.validated_data['contact_number'] )
-    #     account.set_password(password)
-    #     account.save()
         
 class ProgramsOfferedSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,20 +43,12 @@ class AdmissionSerializer(serializers.ModelSerializer):
 class FacilitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Facilities
-        fields = ['id', 'school','facility_name', 'facility_description']
+        fields = ['id', 'school','facility_name', 'facility_description', 'facility_image']
 
 class ActivitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Activities
         fields = ['id', 'school', 'activity_name', 'activity_description','activity_image']
-    # def create(self, validated_data):
-    #     # Assuming 'school' is provided in the request data or serializer context
-    #     school = validated_data.pop('school', None)
-    #     if school:
-    #         activity = Activities.objects.create(school=school, **validated_data)
-    #         return activity
-    #     else:
-    #         raise serializers.ValidationError("School is required for creating an activity.")
 
 class ClubsSerializer(serializers.ModelSerializer):
     class Meta:
