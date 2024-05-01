@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import axios from "axios";
 import imgTest from "../../assets/logo.png";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 export const Sign_Up = () => {
+  const navigate = useNavigate();
   const [option, selectedOption] = useState("");
+  const [correct, setCorrect] = useState(false);
   const [newAccount, setNewAccount] = useState({
     username: "",
     first_name: "",
@@ -35,7 +38,14 @@ export const Sign_Up = () => {
         "http://127.0.0.1:8000/api/representative",
         formData
       );
-      console.log("Successfully added", response.data);
+      console.log(response.data);
+      if (response.data !== "Email already registered") {
+        setCorrect(false);
+        console.log("Successfully added", response.data);
+        navigate("/login");
+      } else {
+        setCorrect(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -62,6 +72,11 @@ export const Sign_Up = () => {
         <div className="flex  justify-center flex-col rounded-md p-2 gap-2">
           <form action="" className="flex flex-col items-end border gap-2 p-8">
             <div className="flex items-center gap-2">
+              {correct && (
+                <div className="bg-[#F5656561] text-sm border-[1px] border-[#FF000061] px-[20px] py-[5px] rounded-md">
+                  <h1>Incorrect username or password</h1>
+                </div>
+              )}
               <label htmlFor="userName">Username</label>
               <input
                 type="text"

@@ -1,7 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import imgTest from "../../assets/logo.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Admin from "./ViewAdmin";
 export const Login = () => {
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [correct, setCorrect] = useState(false);
+  const navigate = useNavigate();
+
+  const handlePass = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleUser = (e) => {
+    setIdentifier(e.target.value);
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    let data;
+    console.log("Hellow Owrld");
+    if (identifier && password) {
+      console.log({ identifier, password });
+      data = {
+        identifier: identifier,
+        password: password,
+      };
+    }
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/login",
+        data
+      );
+      if (response.data !== "Incorrect user or password") {
+        console.log(response);
+
+        const token = response.data.token;
+        sessionStorage.setItem("token", token);
+        setCorrect(false);
+        console.log("THIS IS EMAIL", response.data.email);
+        const email = response.data.email;
+        navigate(`/representative/view-data/${email}`);
+      } else {
+        setCorrect(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setCorrect(true);
+    }
+  };
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="w-full md:w-3/5 flex flex-col xl:flex-row items-center  justify-center gap-10 bg-white p-8 rounded-lg">
@@ -24,11 +73,13 @@ export const Login = () => {
         <div className="flex items-center w-[100%]  lg:w-[60%]  flex-col rounded-md p-2 gap-2">
           <form action="" className="flex flex-col items-end border gap-2 p-8">
             <div className="flex items-center gap-2">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">Email or Username</label>
+
               <input
-                type="email"
+                type="text"
                 placeholder="Enter email:"
                 className="form-control border-2 border rounded-md w-60 p-2"
+                onChange={handleUser}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -37,17 +88,22 @@ export const Login = () => {
                 type="password"
                 placeholder="Enter password:"
                 className="form-control border-2 border w-60 p-2 rounded-md"
+                onChange={handlePass}
               />
             </div>
+            {correct && (
+              <div className="bg-[#F5656561] text-sm border-[1px] border-[#FF000061] px-[20px] py-[5px] rounded-md">
+                <h1>Incorrect username or password</h1>
+              </div>
+            )}
             <div className="text-center">
-              <NavLink to="/representative/view-data">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded "
-                  formAction=""
-                >
-                  Login
-                </button>
-              </NavLink>
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded "
+                formAction=""
+                onClick={handleLogin}
+              >
+                Login
+              </button>
             </div>
           </form>
           <div className="flex flex-row gap-1 items-center">
