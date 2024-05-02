@@ -39,8 +39,8 @@ export const AddProgram = ({ school_id, school_name }) => {
           },
         }
       );
-      console.log("Program Added Successfully", response.data);
       setCorrect(false);
+      alert("Added Successfully");
       window.location.reload();
     } catch (error) {
       if (error.response && error.response.status === 406) {

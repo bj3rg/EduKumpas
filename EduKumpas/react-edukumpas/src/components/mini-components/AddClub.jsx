@@ -47,7 +47,7 @@ export const AddClub = ({ school_id, school_name }) => {
           },
         }
       );
-      console.log("Added Successfully", response.data);
+      alert("Added Successfully");
       setCorrect(false);
       window.location.reload();
     } catch (error) {

@@ -46,7 +46,7 @@ export const AddFacilities = ({ school_id, school_name }) => {
           },
         }
       );
-      console.log("added successfully", response.data);
+      alert("Added Successfully");
       window.location.reload();
     } catch (error) {
       if (error.response && error.response.status === 406) {

@@ -30,6 +30,7 @@ export const AddAdmission = ({ school_id, school_name }) => {
           },
         }
       );
+      alert("Added Successfully");
       window.location.reload();
     } catch (error) {
       if (error.response && error.response.status === 406) {

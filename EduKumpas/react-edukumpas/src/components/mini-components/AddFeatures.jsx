@@ -45,7 +45,7 @@ export const AddFeatures = ({ school_id, school_name }) => {
           },
         }
       );
-      console.log("Added successfully", response.data);
+      alert("Added Successfully");
       setCorrect(false);
       window.location.reload();
     } catch (error) {

@@ -47,7 +47,7 @@ export const AddNews = ({ school_id, school_name }) => {
         }
       );
       setCorrect(false);
-      console.log("Added successfully ", response.data);
+      alert("Added Successfully");
       window.location.reload();
     } catch (error) {
       setInvalid("Complete the fields");
