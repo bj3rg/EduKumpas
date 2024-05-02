@@ -140,20 +140,64 @@ class AdminSchoolListViewByID(APIView):
         serializer= SchoolsSerializer(school, many=True)
         mapped_data = serializer.data
         return Response(mapped_data)
+
+class AdminAdmissionListView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
+    def get(self, request, id=None):
+        school = request.query_params.get('school')
+        if school:
+            offered = Admission.objects.filter(school=school)
+        else:
+            offered = Admission.objects.all()
+        data = list(offered.values('id', 'name', 'description', 'fee'))
+        return Response(data)
+            
+    def post(self, request, id=None):
+        data =request.data
+        school = data['name']
+        offering = Admission.objects.filter(name= school).exists()
+        if offering:
+            return Response('Already listed', status=status.HTTP_406_NOT_ACCEPTABLE)
+        serializer = AdmissionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        try:
+            admission = Admission.objects.get(id=id)
+            admission.delete()
+            return Response({'message': 'Admission deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Admission.DoesNotExist:
+            return Response({'error': 'Admission not found'}, status=status.HTTP_404_NOT_FOUND)
+    def put(self, request, pk):
+        try:
+            admission = Admission.objects.get(pk=pk)
+        except Admission.DoesNotExist:
+            return Response({'error': 'Admission not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+        serializer = AdmissionSerializer(admission, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class AdminOfferedListView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
+    def get(self, request, id=None):
         school = request.query_params.get('school')
         if school:
             offered = ProgramsOffered.objects.filter(school=school)
         else:
             offered = ProgramsOffered.objects.all()
-        data = list(offered.values( 'program_name','program_description' , 'duration', 'tuition_fee'))
+        data = list(offered.values( 'program_name','program_description' , 'duration', 'tuition_fee_start_range', 'tuition_fee_end_range'))
         return Response(data)
-    def post(self, request):
+    def post(self, request, id=None):
         data =request.data
         school = data['program_name']
         offering = ProgramsOffered.objects.filter(program_name= school).exists()
@@ -164,12 +208,19 @@ class AdminOfferedListView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        try:
+            offer = ProgramsOffered.objects.get(id=id)
+            offer.delete()
+            return Response({'message': 'Program deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except ProgramsOffered.DoesNotExist:
+            return Response({'error': 'Program not found'}, status=status.HTTP_404_NOT_FOUND)
     
 class AdminActivitiesListView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
+    def get(self, request, id=None):
         school = request.query_params.get('school')
         if school:
             activities = Activities.objects.filter(school=school)
@@ -177,7 +228,7 @@ class AdminActivitiesListView(APIView):
             activities = Activities.objects.all()
         data = list(activities.values('activity_name', 'activity_description', 'activity_image'))
         return Response(data)
-    def post(self, request):
+    def post(self, request, id=None):
         data =request.data
         school = data['activity_name']
         offering = Activities.objects.filter(activity_name= school).exists()
@@ -188,12 +239,19 @@ class AdminActivitiesListView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        try:
+            activity = Activities.objects.get(id=id)
+            activity.delete()
+            return Response({'message': 'Activity deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Activities.DoesNotExist:
+            return Response({'error': 'Activity not found'}, status=status.HTTP_404_NOT_FOUND)
     
 class AdminFacilitiesListView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
+    def get(self, request, id=None):
         school = request.query_params.get('school')
         if school:
             facilities = Facilities.objects.filter(school=school)
@@ -201,7 +259,7 @@ class AdminFacilitiesListView(APIView):
             facilities = Facilities.objects.all()
         data = list(facilities.values('facility_name', 'facility_description', 'facility_image'))
         return Response(data)
-    def post(self, request):
+    def post(self, request, id=None):
         data =request.data
         school = data['facility_name']
         offering = Facilities.objects.filter(facility_name= school).exists()
@@ -212,12 +270,19 @@ class AdminFacilitiesListView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        try:
+            facility = Facilities.objects.get(id=id)
+            facility.delete()
+            return Response({'message': 'Facility deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Facilities.DoesNotExist:
+            return Response({'error': 'Facility not found'}, status=status.HTTP_404_NOT_FOUND)
     
 class AdminClubListView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
+    def get(self, request, id=None):
         school = request.query_params.get('school')
         if school:
             clubs = Clubs.objects.filter(school=school)
@@ -225,7 +290,7 @@ class AdminClubListView(APIView):
             clubs = Clubs.objects.all()
         data = list(clubs.values('club_name', 'club_description', 'club_image'))
         return Response(data)
-    def post(self, request):
+    def post(self, request, id=None):
         data =request.data
         school = data['club_name']
         offering = Clubs.objects.filter(club_name= school).exists()
@@ -236,12 +301,19 @@ class AdminClubListView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        try:
+            club = Clubs.objects.get(id=id)
+            club.delete()
+            return Response({'message': 'Club deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Clubs.DoesNotExist:
+            return Response({'error': 'Club not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class AdminFeaturesListView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
+    def get(self, request, id=None):
         school = request.query_params.get('school')
         if school:
             features = FeaturesHighlights.objects.filter(school=school)
@@ -249,18 +321,25 @@ class AdminFeaturesListView(APIView):
             features = FeaturesHighlights.objects.all()
         data = list(features.values('feature_image'))
         return Response(data)
-    def post(self, request):
+    def post(self, request, id=None):
         serializer = FeaturesHighlightsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        try:
+            feature = FeaturesHighlights.objects.get(id=id)
+            feature.delete()
+            return Response({'message': 'Features deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except FeaturesHighlights.DoesNotExist:
+            return Response({'error': 'Features not found'}, status=status.HTTP_404_NOT_FOUND)
     
 class AdminNewsListView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
+    def get(self, request, id=None):
         school = request.query_params.get('school')
         if school:
             news = News.objects.filter(school=school)
@@ -268,10 +347,17 @@ class AdminNewsListView(APIView):
             news = News.objects.all()
         data = list(news.values('news_header', 'news_description', 'news_image'))
         return Response(data)
-    def post(self, request):
+    def post(self, request, id=None):
         serializer = NewsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        try:
+            news = News.objects.get(id=id)
+            news.delete()
+            return Response({'message': 'News deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except News.DoesNotExist:
+            return Response({'error': 'News not found'}, status=status.HTTP_404_NOT_FOUND)
     
