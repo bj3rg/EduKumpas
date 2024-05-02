@@ -28,7 +28,7 @@ export const Features = ({ schoolID }) => {
       {schoolsData.map((info, index) => (
         <div key={index} className="flex justify-center">
           <img
-            className="w-96 h-48 object-fill rounded-xl"
+            className="w-5/5 h-5/5 object-fill rounded-xl"
             src={`http://127.0.0.1:8000/media/${info.feature_image}`}
             alt=""
           />
