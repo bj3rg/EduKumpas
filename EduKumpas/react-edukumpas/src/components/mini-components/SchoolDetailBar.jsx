@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 export const SchoolDetailBar = ({ onTabClick, activeTab }) => {
   const tabs = [
     { name: "Programs", value: "programs" },
-    { name: "Admissions", value: "admissions" }, // Add this tab if needed
+    { name: "Expenses", value: "admission" }, // Add this tab if needed
     { name: "Facilities", value: "facilities" },
     { name: "Activities", value: "activities" },
     { name: "Clubs", value: "clubs" },

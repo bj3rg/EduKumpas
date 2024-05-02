@@ -9,7 +9,8 @@ export const AddProgram = ({ school_id, school_name }) => {
     school: school_id || "",
     program_name: "",
     program_description: "",
-    tuition_fee: "",
+    tuition_fee_start_range: "",
+    tuition_fee_end_range: "",
     duration: "",
   });
 
@@ -20,7 +21,11 @@ export const AddProgram = ({ school_id, school_name }) => {
     formData.append("school", newProgram.school);
     formData.append("program_name", newProgram.program_name);
     formData.append("program_description", newProgram.program_description);
-    formData.append("tuition_fee", newProgram.tuition_fee);
+    formData.append(
+      "tuition_fee_start_range",
+      newProgram.tuition_fee_start_range
+    );
+    formData.append("tuition_fee_end_range", newProgram.tuition_fee_end_range);
     formData.append("duration", newProgram.duration);
 
     console.log("FormData", formData);
@@ -94,12 +99,24 @@ export const AddProgram = ({ school_id, school_name }) => {
         {/* third row */}
         <div className="w-full flex justify-between ">
           <FieldInput
-            inputDisplay={"Tuition Fee"}
+            inputDisplay={"Tuition Fee Start Range per year"}
             type={"number"}
             handleChange={(e) => {
               setNewProgram((prev) => ({
                 ...prev,
-                tuition_fee: e.target.value,
+                tuition_fee_start_range: e.target.value,
+              }));
+            }}
+          />
+        </div>
+        <div className="w-full flex justify-between ">
+          <FieldInput
+            inputDisplay={"Tuition Fee End Range per year"}
+            type={"number"}
+            handleChange={(e) => {
+              setNewProgram((prev) => ({
+                ...prev,
+                tuition_fee_end_range: e.target.value,
               }));
             }}
           />

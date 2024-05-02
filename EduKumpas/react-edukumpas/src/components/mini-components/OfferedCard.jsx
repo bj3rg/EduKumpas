@@ -1,5 +1,4 @@
 import React from "react";
-// import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 export const OfferedCard = ({ schoolID }) => {
@@ -33,14 +32,20 @@ export const OfferedCard = ({ schoolID }) => {
           >
             <h4 className="font-bold">{offered.program_name}</h4>
             <p className="text-justify">
-              Course Decsription: Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Iure sed, cum fugiat recusandae deleniti
-              explicabo deserunt laudantium sunt, porro soluta architecto nemo
-              facilis consectetur officiis, culpa aliquid adipisci doloremque
-              quos.
+              Course Description: {offered.program_description}
             </p>
-            <p className="text-red-600">Tuition Fee: {offered.tuition_fee}</p>
-            <p className="text-red-600">Program Duration: {offered.duration}</p>
+            <p>
+              Tuition Fee per year:{" "}
+              <span className="text-red-600 ">
+                Php.
+                {offered.tuition_fee_start_range} -{" "}
+                {offered.tuition_fee_end_range}
+              </span>
+            </p>
+            <p>
+              Program Duration:{" "}
+              <span className="text-red-600">{offered.duration} years</span>{" "}
+            </p>
           </div>
         </div>
       ))}
