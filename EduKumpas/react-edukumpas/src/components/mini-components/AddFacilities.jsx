@@ -38,7 +38,7 @@ export const AddFacilities = ({ school_id, school_name }) => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/admin/facilities",
+        "http://127.0.0.1:8000/api/admin/facilities/0",
         formData,
         {
           headers: {

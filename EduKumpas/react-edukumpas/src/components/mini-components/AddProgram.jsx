@@ -31,7 +31,7 @@ export const AddProgram = ({ school_id, school_name }) => {
     console.log("FormData", formData);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/admin/offered",
+        "http://127.0.0.1:8000/api/admin/offered/0",
         formData,
         {
           headers: {

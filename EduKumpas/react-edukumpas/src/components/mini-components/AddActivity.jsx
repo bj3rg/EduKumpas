@@ -41,7 +41,7 @@ function AddActivity({ school_id, school_name }) {
     console.log("FormData:", formData); // Log the FormData before sending the request
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/admin/activities",
+        "http://127.0.0.1:8000/api/admin/activities/0",
         formData,
         {
           headers: {

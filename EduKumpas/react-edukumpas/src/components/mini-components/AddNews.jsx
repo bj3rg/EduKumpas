@@ -38,7 +38,7 @@ export const AddNews = ({ school_id, school_name }) => {
     console.log("FormData:", formData);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/admin/news",
+        "http://127.0.0.1:8000/api/admin/news/0",
         formData,
         {
           headers: {

@@ -37,7 +37,7 @@ export const AddFeatures = ({ school_id, school_name }) => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/admin/features",
+        "http://127.0.0.1:8000/api/admin/features/0",
         formData,
         {
           headers: {
