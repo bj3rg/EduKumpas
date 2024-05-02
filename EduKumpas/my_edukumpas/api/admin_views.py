@@ -195,7 +195,7 @@ class AdminOfferedListView(APIView):
             offered = ProgramsOffered.objects.filter(school=school)
         else:
             offered = ProgramsOffered.objects.all()
-        data = list(offered.values( 'program_name','program_description' , 'duration', 'tuition_fee_start_range', 'tuition_fee_end_range'))
+        data = list(offered.values( 'id','program_name','program_description' , 'duration', 'tuition_fee_start_range', 'tuition_fee_end_range'))
         return Response(data)
     def post(self, request, id=None):
         data =request.data
@@ -226,7 +226,7 @@ class AdminActivitiesListView(APIView):
             activities = Activities.objects.filter(school=school)
         else:
             activities = Activities.objects.all()
-        data = list(activities.values('activity_name', 'activity_description', 'activity_image'))
+        data = list(activities.values('id','activity_name', 'activity_description', 'activity_image'))
         return Response(data)
     def post(self, request, id=None):
         data =request.data
@@ -257,7 +257,7 @@ class AdminFacilitiesListView(APIView):
             facilities = Facilities.objects.filter(school=school)
         else:
             facilities = Facilities.objects.all()
-        data = list(facilities.values('facility_name', 'facility_description', 'facility_image'))
+        data = list(facilities.values('id','facility_name', 'facility_description', 'facility_image'))
         return Response(data)
     def post(self, request, id=None):
         data =request.data
@@ -288,7 +288,7 @@ class AdminClubListView(APIView):
             clubs = Clubs.objects.filter(school=school)
         else:
             clubs = Clubs.objects.all()
-        data = list(clubs.values('club_name', 'club_description', 'club_image'))
+        data = list(clubs.values('id','club_name', 'club_description', 'club_image'))
         return Response(data)
     def post(self, request, id=None):
         data =request.data
@@ -319,7 +319,7 @@ class AdminFeaturesListView(APIView):
             features = FeaturesHighlights.objects.filter(school=school)
         else:
             features = FeaturesHighlights.objects.all()
-        data = list(features.values('feature_image'))
+        data = list(features.values('id','feature_image'))
         return Response(data)
     def post(self, request, id=None):
         serializer = FeaturesHighlightsSerializer(data=request.data)
@@ -345,7 +345,7 @@ class AdminNewsListView(APIView):
             news = News.objects.filter(school=school)
         else:
             news = News.objects.all()
-        data = list(news.values('news_header', 'news_description', 'news_image'))
+        data = list(news.values('id','news_header', 'news_description', 'news_image'))
         return Response(data)
     def post(self, request, id=None):
         serializer = NewsSerializer(data=request.data)
