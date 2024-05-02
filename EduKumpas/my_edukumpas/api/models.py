@@ -40,14 +40,15 @@ class ProgramsOffered(models.Model):
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
     program_name = models.CharField(max_length=100)
     program_description = models.TextField()
-    tuition_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    tuition_fee_start_range = models.DecimalField(max_digits=10, decimal_places=2)
+    tuition_fee_end_range = models.DecimalField(max_digits=10, decimal_places=2)
     duration = models.CharField(max_length=50)
 
 class Admission(models.Model):
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)
-    requirements = models.TextField()
-    process_guide = models.TextField()
-    admission_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    name = models.TextField()
+    description = models.TextField()
+    fee = models.DecimalField(max_digits=10, decimal_places=2)
     
 class Facilities(models.Model):
     school = models.ForeignKey(Schools, on_delete=models.CASCADE)

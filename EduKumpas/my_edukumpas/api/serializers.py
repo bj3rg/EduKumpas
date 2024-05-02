@@ -33,12 +33,12 @@ class RepresentativeSerializer(serializers.ModelSerializer):
 class ProgramsOfferedSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgramsOffered
-        fields = ['id', 'school', 'program_name', 'program_description', 'tuition_fee', 'duration']
+        fields = ['id', 'school', 'program_name', 'program_description', 'tuition_fee_start_range', 'tuition_fee_end_range', 'duration']
 
 class AdmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Admission
-        fields = ['id','school', 'requirements', 'process_guide', 'admission_fee']
+        fields = ['id','school','name','description', 'fee']
 
 class FacilitiesSerializer(serializers.ModelSerializer):
     class Meta:

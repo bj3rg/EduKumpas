@@ -6,12 +6,12 @@ class SchoolsAdmin(admin.ModelAdmin):
     search_fields = ['school_name', 'school_type', 'public_private']
     
 class OfferedAdmin(admin.ModelAdmin):
-    list_display = ('school', 'program_name', 'tuition_fee', 'duration')
+    list_display = ('school', 'program_name', 'duration' ,'tuition_fee_start_range', 'tuition_fee_end_range')
     search_fields = ['program_name', 'school']
     
 class AdmissionAdmin(admin.ModelAdmin):
-    list_display = ('school', 'requirements', 'process_guide', 'admission_fee')
-    search_fields = ['requirements', 'process_guide']
+    list_display = ('school', 'fee','name','description')
+    search_fields = ['name', 'fee']
     
 class FacilitiesAdmin(admin.ModelAdmin):
     list_display = ('school', 'facility_name', 'facility_description', 'facility_image')

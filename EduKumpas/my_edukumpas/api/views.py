@@ -87,8 +87,34 @@ class RepresentativeList(APIView):
         except Exception as e:
             error_message = str(e)
             return Response({'error': error_message,}, status=status.HTTP_400_BAD_REQUEST)
-        
 
+class SchoolSearchListView(APIView):
+    # authentication_classes = [SessionAuthentication, TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        query = request.GET.get('q', '')
+        search_fields = ['school_name__icontains', 'school_type__icontains', 'school_location__icontains',]
+        
+        search_q = Q()
+        if query:
+            for field in search_fields:
+                search_q |= Q(**{field: query})
+
+        schools = Schools.objects.filter(search_q)
+        serializer = SchoolsSerializer(schools, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+class AdmissionListView(APIView):
+    def get(self, request):
+        school = request.query_params.get('school')
+        if school:
+            offered = Admission.objects.filter(school=school)
+        else:
+            offered = Admission.objects.all()
+        data = list(offered.values( 'name', 'description', 'fee'))
+        return Response(data)
+    
 class SchoolListView(APIView):
     # authentication_classes = [SessionAuthentication, TokenAuthentication]
     # permission_classes = [IsAuthenticated]
@@ -141,14 +167,42 @@ class SchoolListViewByID(APIView):
         return Response(mapped_data)
     
 class OfferedListView(APIView):
+    # def get(self, request):
+    #     school = request.query_params.get('school')
+    #     if school:
+    #         offered = ProgramsOffered.objects.filter(school=school)
+    #     else:
+    #         offered = ProgramsOffered.objects.all()
+    #     data = list(offered.values( 'program_name','program_description' , 'duration', 'tuition_fee_start_range', 'tuition_fee_end_range'))
+    #     return Response(data)
     def get(self, request):
-        school = request.query_params.get('school')
-        if school:
-            offered = ProgramsOffered.objects.filter(school=school)
+        school_id = request.query_params.get('school')
+        if school_id:
+            offered = ProgramsOffered.objects.filter(school_id=school_id)
         else:
             offered = ProgramsOffered.objects.all()
-        data = list(offered.values( 'program_name','program_description' , 'duration', 'tuition_fee'))
-        return Response(data)
+
+        combined_data = []
+        for program in offered:
+            program_data = {
+                
+                'program_name': program.program_name,
+                'program_description': program.program_description,
+                'tuition_fee_start_range': program.tuition_fee_start_range,
+                'tuition_fee_end_range': program.tuition_fee_end_range,
+                'duration': program.duration,
+            }
+            school = Schools.objects.filter(id=program.school_id).first()
+            if school:
+                school_data = {
+                    'school_name': school.school_name,
+                    'school_location': school.school_location,
+                    'school':school.id
+                    # Add other school fields as needed
+                }
+                combined_data.append({**program_data, **school_data})
+
+        return Response(combined_data)
     # def post(self, request):
     #     serializer = ProgramsOfferedSerializer(data=request.data)
     #     if serializer.is_valid():
