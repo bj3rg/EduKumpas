@@ -17,8 +17,8 @@ from .models import *
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 CustomUser = get_user_model()
-print(make_password('12345'))
-print(check_password('1234','pbkdf2_sha256$720000$K9qlERHbhsZvGPXH8EFdJC$Hwo4oaNiBtC3UKtYmRlUzipdgtYIrzaEjph7J2bhQBo=' ))
+# print(make_password('12345'))
+# print(check_password('1234','pbkdf2_sha256$720000$K9qlERHbhsZvGPXH8EFdJC$Hwo4oaNiBtC3UKtYmRlUzipdgtYIrzaEjph7J2bhQBo=' ))
 
 
 class LoginView(APIView):

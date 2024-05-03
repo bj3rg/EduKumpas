@@ -20,7 +20,6 @@ CustomUser = get_user_model()
 print(make_password('12345'))
 print(check_password('1234','pbkdf2_sha256$720000$K9qlERHbhsZvGPXH8EFdJC$Hwo4oaNiBtC3UKtYmRlUzipdgtYIrzaEjph7J2bhQBo=' ))
 
-
 class LoginView(APIView):
     def post(self, request):
         identifier = request.data.get('identifier')  # This can be either username or email
