@@ -33,10 +33,26 @@ class LoginView(APIView):
 
         if not user.check_password(password):
             return Response('Incorrect identifier or password', status=status.HTTP_401_UNAUTHORIZED)
-
-        token, _ = Token.objects.get_or_create(user=user)
-        serializer = UserSerializer(user)
-        return Response({"token": token.key, "email": serializer.data['email']}, status=status.HTTP_200_OK)
+        
+        if user.is_staff:
+            token, _ = Token.objects.get_or_create(user=user)
+            serializer = UserSerializer(user)
+            email = serializer.data['email']
+            representative = Representative.objects.filter(email_address=email).first()
+            if representative: 
+                response_data = {
+                    "token": token.key,
+                    "user": serializer.data['username'],
+                    "email":email,
+                    "school":representative.school
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
+            else:
+        # No representative found for the given email
+                return Response('No representative found for this email.', status=status.HTTP_404_NOT_FOUND)
+            # return Response({"token": token.key, "user": serializer.data['username']}, status=status.HTTP_200_OK)
+        else:
+            return Response('You are not authorized to access this resource.', status=status.HTTP_403_FORBIDDEN)
 
 class AdminRepresentativeList(APIView):
     def post(self,request):
